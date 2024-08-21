@@ -3,7 +3,6 @@ version: 0.2
 env:
   variables:
     REPOSITORY_URI: 891377353125.dkr.ecr.ap-south-1.amazonaws.com/springboot
-    IMAGE_TAG: build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
     DOCKER_CONTAINER_NAME: springboot
 
 phases:
@@ -17,6 +16,8 @@ phases:
   build:
     commands:
       - echo 'Build started on `date`'
+      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
+      - echo "IMAGE_TAG: $IMAGE_TAG"
       - echo 'Building the Docker image...'
       - docker build -t $REPOSITORY_URI:latest .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
